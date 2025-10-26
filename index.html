@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Satélite Offline PWA — Prévia (sem botões)</title>
+  <title>Satélite Offline PWA — Prévia</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     html, body, #map { height: 100%; margin: 0; }
@@ -13,6 +13,7 @@
     .you { position: relative; width:10px; height:10px; background:#00d1ff; border:2px solid #fff; border-radius:50%; box-shadow:0 0 0 2px rgba(0,0,0,.3); }
     .you::after { content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin-left:-10px; margin-top:-10px; border:2px solid #00d1ff; border-radius:50%; opacity:.7; animation: youPulse 1.8s ease-out infinite; }
     @keyframes youPulse { 0% { transform: scale(0.6); opacity:.8; } 70% { transform: scale(1.6); opacity:0; } 100% { opacity:0; } }
+
     /* Barra de crédito full-width combinando com a caixa do Leaflet */
     .creditbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 500;
       display: flex; align-items: center; justify-content: center;
@@ -22,6 +23,7 @@
       -webkit-user-select: none; user-select: none; pointer-events: none;
       backdrop-filter: saturate(180%) blur(2px);
     }
+
     /* Barra de ações acima do rodapé */
     .actionbar { position: fixed; left: 0; right: 0; z-index: 900; display: flex; justify-content: center; align-items: center;
       bottom: calc(var(--creditbar-h, 24px) + env(safe-area-inset-bottom) + 8px);
@@ -32,12 +34,16 @@
       box-shadow: 0 6px 16px rgba(0,0,0,.25); backdrop-filter: saturate(180%) blur(4px); flex: 1; text-align: center; }
     .btn:active { transform: translateY(1px); }
     .btn.active { background: rgba(0,0,0,.75); }
+    /* Estados ativos específicos */
+    .btn-stay.active { background:#000; color:#fff; }
+    .btn-curve.active { background:#e11d48; color:#fff; }
     .btn-sm { padding: 8px 10px; border-radius: 10px; font-size: clamp(11px, 2.2vw, 13px); flex: 0 0 auto; opacity: .95; }
     /* Cores específicas dos botões pequenos */
     .btn-blue { background: rgba(37,99,235,.85); color:#fff; }
     .btn-blue.active { background: rgba(37,99,235,1); }
     .btn-green { background: rgba(16,185,129,.85); color:#fff; }
     .btn-green.active { background: rgba(16,185,129,1); }
+
     /* Bússola discreta (canto superior direito) */
     .compass { position: fixed; top: env(safe-area-inset-top, 8px); right: 8px; z-index: 1200;
       width: 38px; height: 38px; border-radius: 12px; background: rgba(0,0,0,.55); box-shadow: 0 6px 16px rgba(0,0,0,.25);
@@ -56,8 +62,8 @@
   </div>
   <div id="actionBar" class="actionbar">
     <div class="actionwrap">
-      <button id="btnStay" class="btn" type="button">Permanência</button>
-      <button id="btnCurve" class="btn" type="button">Curva</button>
+      <button id="btnStay" class="btn btn-stay" type="button">Permanência</button>
+      <button id="btnCurve" class="btn btn-curve" type="button">Curva</button>
       <button id="btnPrintBlue" class="btn btn-sm btn-blue" type="button" aria-label="Print">Print</button>
       <button id="btnMsmGreen" class="btn btn-sm btn-green" type="button" aria-label="Msm">Msm</button>
     </div>
@@ -75,7 +81,7 @@
     const QUICK_ZOOM_ON_HINT = 14;                                     // zoom rápido com posição em cache
 
     const map = L.map('map', { zoomControl: false }).setView([START_FALLBACK.lat, START_FALLBACK.lng], START_FALLBACK.z);
-    L.tileLayer(TILE_URL, { tileSize:256, minZoom:0, maxZoom:18, detectRetina:true, crossOrigin: true }).addTo(map);
+    L.tileLayer(TILE_URL, { tileSize:256, minZoom:0, maxZoom:18, detectRetina:true, crossOrigin:true }).addTo(map);
 
     // Ajusta altura/cor da barra de crédito para casar com atribuição do Leaflet
     (function syncCreditBar(){
@@ -106,7 +112,7 @@
     // ===== Permanência (gravação de percurso) =====
     let stayActive = false;
     let stayStart = null;        // {lat, lng}
-    let stayPolyline = null;     // L.Polyline com largura ~10 m (ajustada por zoom)
+    let stayPolyline = null;     // L.Polyline com largura ~50 m (ajustada por zoom)
 
     // ===== Curva (gravação com traçado em "seta") =====
     let curveActive = false;
@@ -122,16 +128,16 @@
     function updateStayPolylineStyle(){
       if (!stayPolyline || !lastAvg) return;
       const mpp = metersPerPixelAtLat(lastAvg.coords.latitude, map.getZoom());
-      const px = Math.max(1, Math.round(10 / mpp)); // 10 m alvo
+      const px = Math.max(2, Math.round(50 / mpp)); // 50 m alvo
       stayPolyline.setStyle({ color:'#000000', opacity:0.65, weight: px });
     }
     function updateCurveStyle(){
       if (!curvePolyline || !lastAvg) return;
       const mpp = metersPerPixelAtLat(lastAvg.coords.latitude, map.getZoom());
-      const px = Math.max(2, Math.round(1.5 / mpp)); // 1.5 m alvo
+      const px = Math.max(2, Math.round(10 / mpp)); // 10 m alvo
       curvePolyline.setStyle({ color:'#e11d48', opacity:1, weight: px });
       // Atualiza decorator (setas)
-      if (curveDecorator) { try { map.removeLayer(curveDecorator); } catch {} }
+      if (curveDecorator) { try { map.removeLayer(curveDecorator); } catch(e){} }
       if (curvePolyline) {
         const arrowSize = Math.max(6, Math.round(12 / mpp)); // tamanho da seta em px
         curveDecorator = L.polylineDecorator(curvePolyline, {
@@ -144,10 +150,11 @@
     map.on('zoomend', ()=>{ updateStayPolylineStyle(); updateCurveStyle(); });
 
     function startStay(){
-      if (stayActive) return;
+      if (stayActive) return true;
       const startLat = (lastAvg && lastAvg.coords.latitude) || (youDot && youDot.getLatLng().lat);
       const startLng = (lastAvg && lastAvg.coords.longitude) || (youDot && youDot.getLatLng().lng);
-      if (typeof startLat !== 'number' || typeof startLng !== 'number') { console.warn('Permanência: sem posição ainda.'); return; }
+      if (typeof startLat !== 'number' || typeof startLng !== 'number') { console.warn('Permanência: sem posição ainda.'); return false; }
+
       stayStart = { lat: startLat, lng: startLng };
       stayPolyline = L.polyline([[startLat, startLng]], { color:'#000000', opacity:0.65, weight: 6 }).addTo(map);
       updateStayPolylineStyle();
@@ -165,10 +172,11 @@
       stayStart = null;
     }
     function startCurve(){
-      if (curveActive) return;
+      if (curveActive) return true;
       const startLat = (lastAvg && lastAvg.coords.latitude) || (youDot && youDot.getLatLng().lat);
       const startLng = (lastAvg && lastAvg.coords.longitude) || (youDot && youDot.getLatLng().lng);
-      if (typeof startLat !== 'number' || typeof startLng !== 'number') { console.warn('Curva: sem posição ainda.'); return; }
+      if (typeof startLat !== 'number' || typeof startLng !== 'number') { console.warn('Curva: sem posição ainda.'); return false; }
+
       curveStart = { lat: startLat, lng: startLng };
       curvePolyline = L.polyline([[startLat, startLng]], { color:'#e11d48', opacity:1, weight: 4 }).addTo(map);
       updateCurveStyle();
@@ -185,7 +193,7 @@
         localStorage.setItem(key, JSON.stringify(trimmed));
       }
       curveStart = null;
-      // mantém o traçado no mapa; se quiser limpar, poderíamos remover aqui
+      // mantém o traçado no mapa
     }
 
     // ===== Utilidades de posição =====
@@ -235,14 +243,14 @@
             map.setView([pos.coords.latitude, pos.coords.longitude], QUICK_ZOOM_ON_HINT);
           }
         }, ()=>{}, { enableHighAccuracy: false, maximumAge: 120000, timeout: 3000 });
-      } catch {}
+      } catch(e){}
       // 2) Permissions API (se disponível)
       try {
         if (navigator.permissions && navigator.permissions.query) {
           const perm = await navigator.permissions.query({ name: 'geolocation' });
           if (perm && perm.state === 'denied') return;
         }
-      } catch {}
+      } catch(e){}
       // 3) Watch de alta precisão
       try {
         navigator.geolocation.watchPosition(onGeoSuccess, onGeoError, { enableHighAccuracy: true, maximumAge: 10000, timeout: 20000 });
@@ -263,14 +271,8 @@
       try {
         if (typeof DeviceOrientationEvent.requestPermission === 'function') { DeviceOrientationEvent.requestPermission().then(state=>{ if (state === 'granted') onPermitted(); }); }
         else { onPermitted(); }
-      } catch {}
+      } catch(e){}
     })();
-
-    // ===== Botões =====
-    const btnStay = document.getElementById('btnStay');
-    const btnCurve = document.getElementById('btnCurve');
-    const btnPrintBlue = document.getElementById('btnPrintBlue');
-    const btnMsmGreen = document.getElementById('btnMsmGreen');
 
     // ===== Screenshot helpers (IndexedDB + download) =====
     const DB_NAME = 'app-storage';
@@ -300,18 +302,21 @@
       const d = new Date();
       const pad = (n)=>String(n).padStart(2,'0');
       const name = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
-      return `print_${name}.png`;
+      return `Mapa_${name}.png`;
     }
     async function takeScreenshot(){
       const scale = Math.min(3, Math.max(2, window.devicePixelRatio || 2));
+      // Oculta temporariamente o ponto de localização (classe .you)
+      const hiddenEls = Array.from(document.querySelectorAll('.you'));
+      hiddenEls.forEach(el=> el.style.visibility = 'hidden');
       try {
         const canvas = await html2canvas(document.body, { useCORS:true, backgroundColor:null, scale });
+        // Restaura visibilidade imediatamente após capturar
+        hiddenEls.forEach(el=> el.style.visibility = 'visible');
         const filename = tsFilename();
         canvas.toBlob(async (blob)=>{
           if (!blob) { console.error('Screenshot blob nulo'); return; }
-          // 1) salva no armazenamento (IndexedDB)
           await saveScreenshot(blob, filename);
-          // 2) baixa para o dispositivo (download)
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url; a.download = filename; document.body.appendChild(a); a.click();
@@ -320,19 +325,50 @@
         }, 'image/png');
       } catch(e){
         console.error('Falha no screenshot (CORS pode bloquear tiles do mapa).', e);
+        // Garante restauração em caso de erro
+        hiddenEls.forEach(el=> el.style.visibility = 'visible');
       }
     }
 
-    btnStay?.addEventListener('click', ()=>{ if (!stayActive) { startStay(); btnStay.classList.add('active'); } else { stopStay(); btnStay.classList.remove('active'); } });
-    btnCurve?.addEventListener('click', ()=>{ if (!curveActive) { startCurve(); btnCurve.classList.add('active'); } else { stopCurve(); btnCurve.classList.remove('active'); } });
-    btnPrintBlue?.addEventListener('click', async ()=>{ btnPrintBlue.classList.add('active'); await takeScreenshot(); setTimeout(()=>btnPrintBlue.classList.remove('active'), 500); });
-    btnMsmGreen?.addEventListener('click', ()=>{ btnMsmGreen.classList.toggle('active'); console.log('Msm acionado'); });
+    // ===== Botões =====
+    const btnStay = document.getElementById('btnStay');
+    const btnCurve = document.getElementById('btnCurve');
+    const btnPrintBlue = document.getElementById('btnPrintBlue');
+    const btnMsmGreen = document.getElementById('btnMsmGreen');
+
+    btnStay?.addEventListener('click', ()=>{
+      if (!stayActive) {
+        if (startStay()) { btnStay.classList.add('active'); btnStay.setAttribute('aria-pressed','true'); }
+      } else {
+        stopStay(); btnStay.classList.remove('active'); btnStay.setAttribute('aria-pressed','false');
+      }
+    });
+
+    btnCurve?.addEventListener('click', ()=>{
+      if (!curveActive) {
+        if (startCurve()) { btnCurve.classList.add('active'); btnCurve.setAttribute('aria-pressed','true'); }
+      } else {
+        stopCurve(); btnCurve.classList.remove('active'); btnCurve.setAttribute('aria-pressed','false');
+      }
+    });
+
+    btnPrintBlue?.addEventListener('click', async ()=>{
+      btnPrintBlue.classList.add('active'); btnPrintBlue.setAttribute('aria-pressed','true');
+      await takeScreenshot();
+      setTimeout(()=>{ btnPrintBlue.classList.remove('active'); btnPrintBlue.setAttribute('aria-pressed','false'); }, 500);
+    });
+
+    btnMsmGreen?.addEventListener('click', ()=>{
+      const active = btnMsmGreen.classList.toggle('active');
+      btnMsmGreen.setAttribute('aria-pressed', active ? 'true' : 'false');
+      console.log('Msm acionado');
+    });
 
     // ===== Start =====
     initGeolocation();
 
     // ===== Self-tests (console) =====
-    (function selfTests(){
+    ;(function selfTests(){
       const mock = [ { coords:{ latitude:0, longitude:0, accuracy:10, heading:null } }, { coords:{ latitude:2, longitude:2, accuracy:30, heading:null } } ];
       const avg = averageFix(mock);
       console.assert(Math.abs(avg.coords.latitude-1)<1e-9 && Math.abs(avg.coords.longitude-1)<1e-9, 'averageFix média incorreta');
