@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
@@ -8,51 +9,48 @@
   <style>
     html, body, #map { height: 100%; margin: 0; }
     body { background: #000; color: #fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    .leaflet-popup-content { color:#111; }
+    .leaflet-popup-content { color:#111; }/* Ponto de localização com anel pulsante */
+.you { position: relative; width:10px; height:10px; background:#00d1ff; border:2px solid #fff; border-radius:50%; box-shadow:0 0 0 2px rgba(0,0,0,.3); }
+.you::after { content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin-left:-10px; margin-top:-10px; border:2px solid #00d1ff; border-radius:50%; opacity:.7; animation: youPulse 1.8s ease-out infinite; }
+@keyframes youPulse { 0% { transform: scale(0.6); opacity:.8; } 70% { transform: scale(1.6); opacity:0; } 100% { opacity:0; } }
 
-    /* Ponto de localização com anel pulsante */
-    .you { position: relative; width:10px; height:10px; background:#00d1ff; border:2px solid #fff; border-radius:50%; box-shadow:0 0 0 2px rgba(0,0,0,.3); }
-    .you::after { content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin-left:-10px; margin-top:-10px; border:2px solid #00d1ff; border-radius:50%; opacity:.7; animation: youPulse 1.8s ease-out infinite; }
-    @keyframes youPulse { 0% { transform: scale(0.6); opacity:.8; } 70% { transform: scale(1.6); opacity:0; } 100% { opacity:0; } }
+/* Rodapé responsivo, espessura fixa */
+.creditbar { position: fixed; inset: auto 0 0 0; z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.7); color: #000; text-align: center;
+  height: 28px; line-height: 28px; padding: 0 12px;
+  font-size: clamp(10px, 2.2vw, 13px); font-weight: 500; letter-spacing: .2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  -webkit-user-select: none; user-select: none; pointer-events: none;
+  backdrop-filter: saturate(180%) blur(2px);
+}
+.creditbar .brand-left { position: absolute; left: 8px; top: 0; bottom: 0; display: flex; align-items: center; font-weight: 700; opacity: .9; pointer-events: none; }
 
-    /* Rodapé */
-    .creditbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 500;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(255,255,255,0.7); color: #000; text-align: center;
-      min-height: 28px; padding: 4px 16px; gap: 0;
-      font-size: clamp(10px, 2.5vw, 14px); font-weight: 500; letter-spacing: .2px;
-      -webkit-user-select: none; user-select: none; pointer-events: none;
-      backdrop-filter: saturate(180%) blur(2px);
-    }
-    .creditbar .brand-left { position: absolute; left: 8px; display: flex; align-items: center; font-weight: 700; opacity: .9; pointer-events: none; }
+/* Barra de ações (2 botões harmônicos) */
+.actionbar { position: fixed; left: 0; right: 0; z-index: 900; display: flex; justify-content: center; align-items: center;
+  bottom: calc(36px + env(safe-area-inset-bottom)); pointer-events: auto; }
+.actionwrap { display: flex; gap: 8px; width: min(420px, 92vw); padding: 0 6px; }
+.btn { border: 0; height: 34px; padding: 0 12px; border-radius: 10px; background: rgba(0,0,0,.55); color: #fff;
+  font-size: clamp(12px, 2.6vw, 13px); font-weight: 700; letter-spacing: .3px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.26);
+  backdrop-filter: saturate(180%) blur(4px);
+  text-align: center; cursor: pointer; flex: 1 1 0; min-width: 0; }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible { outline: 2px solid rgba(255,255,255,.75); outline-offset: 2px; }
+.btn-blue { background: rgba(37,99,235,.90); color:#fff; }
+.btn-blue.active { background: rgba(37,99,235,1); }
+.btn-wa { background: #25D366; color:#0b3e23; }
+.btn-wa.active { filter: brightness(0.95); }
 
-    /* Barra de ações */
-    .actionbar { position: fixed; left: 0; right: 0; z-index: 900; display: flex; justify-content: center; align-items: center;
-      bottom: calc(36px + env(safe-area-inset-bottom)); pointer-events: auto; }
-    .actionwrap { display: flex; gap: 8px; width: min(460px, 92vw); padding: 0 6px; }
-    .btn { border: 0; height: 34px; padding: 0 12px; border-radius: 10px; background: rgba(0,0,0,.55); color: #fff;
-      font-size: clamp(12px, 2.6vw, 13px); font-weight: 700; letter-spacing: .3px;
-      box-shadow: 0 6px 14px rgba(0,0,0,.26);
-      backdrop-filter: saturate(180%) blur(4px);
-      text-align: center; cursor: pointer; flex: 1 1 0; min-width: 0; }
-    .btn:active { transform: translateY(1px); }
-    .btn:focus-visible { outline: 2px solid rgba(255,255,255,.75); outline-offset: 2px; }
-    .btn-blue { background: rgba(37,99,235,.90); color:#fff; }
-    .btn-blue.active { background: rgba(37,99,235,1); }
-    .btn-green { background: rgba(16,185,129,.90); color:#fff; }
-    .btn-green.active { background: rgba(16,185,129,1); }
-    /* WhatsApp style */
-    .btn-wa { background: #25D366; color:#0b3e23; }
-    .btn-wa.active { filter: brightness(0.95); }
+/* Bússola */
+.compass { position: fixed; top: 8px; right: 8px; z-index: 1200;
+  width: 38px; height: 38px; border-radius: 12px; background: rgba(0,0,0,.55); box-shadow: 0 6px 16px rgba(0,0,0,.25);
+  display: flex; align-items: center; justify-content: center; backdrop-filter: saturate(180%) blur(4px); }
+.compass .dial { position: relative; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.85); }
+.compass .needle { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-50%, -80%) rotate(0deg);
+  border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 12px solid #e11d48; }
+.compass .n { position:absolute; left:50%; top:-10px; transform: translateX(-50%); font-size: 9px; color:#fff; opacity:.8; }
 
-    /* Bússola */
-    .compass { position: fixed; top: 8px; right: 8px; z-index: 1200;
-      width: 38px; height: 38px; border-radius: 12px; background: rgba(0,0,0,.55); box-shadow: 0 6px 16px rgba(0,0,0,.25);
-      display: flex; align-items: center; justify-content: center; backdrop-filter: saturate(180%) blur(4px); }
-    .compass .dial { position: relative; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.85); }
-    .compass .needle { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-50%, -80%) rotate(0deg);
-      border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 12px solid #e11d48; }
-    .compass .n { position:absolute; left:50%; top:-10px; transform: translateX(-50%); font-size: 9px; color:#fff; opacity:.8; }
   </style>
 </head>
 <body>
@@ -60,42 +58,47 @@
   <div id="compass" class="compass" aria-label="Bússola" title="Bússola">
     <div class="dial"><div class="needle" id="needle"></div></div>
     <div class="n">N</div>
-  </div>
-
-  <div id="actionBar" class="actionbar">
+  </div>  <div id="actionBar" class="actionbar">
     <div class="actionwrap">
       <button id="btnPrintBlue" class="btn btn-blue" type="button" aria-label="Capturar">Capturar</button>
-      <button id="btnLoc" class="btn btn-green" type="button" aria-label="Localização">Localização</button>
       <button id="btnShare" class="btn btn-wa" type="button" aria-label="Compartilhar no WhatsApp">Compartilhar</button>
     </div>
-  </div>
-
-  <div id="creditBar" class="creditbar">
+  </div>  <div id="creditBar" class="creditbar">
     <span class="brand-left">SpotWise</span>
     Feito com ❤️ por Everton Tezzon Ferreira
-  </div>
-
-  <!-- Toast de informação -->
-  <div id="toast" style="position:fixed; left:50%; transform:translateX(-50%); bottom: calc(66px + env(safe-area-inset-bottom)); z-index:1100; background: rgba(0,0,0,.72); color:#fff; border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.3; max-width:min(92vw,560px); text-align:center; display:none; box-shadow:0 6px 16px rgba(0,0,0,.3); pointer-events:none;"></div>
-
-  <!-- Scripts -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script>
+  </div>  <!-- Toast de informação -->  <div id="toast" style="position:fixed; left:50%; transform:translateX(-50%); bottom: calc(66px + env(safe-area-inset-bottom)); z-index:1100; background: rgba(0,0,0,.72); color:#fff; border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.3; max-width:min(92vw,560px); text-align:center; display:none; box-shadow:0 6px 16px rgba(0,0,0,.3); pointer-events:none;"></div>  <!-- Scripts -->  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>  <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>  <script>
     // ===== Config =====
-    const TILE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
-    const START_FALLBACK = { lat: -23.5505, lng: -46.6333, z: 10 }; // zoom inicial
-    const DEFAULT_ZOOM_ON_FIX = 17;                                   // zoom após 1º fix
-    const QUICK_ZOOM_ON_HINT = 14;                                     // zoom rápido com posição em cache
+    const ESRI_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+    const MT_KEY = "tSluSTAGCWjjyqc655pn"; // MapTiler API key
+    const MT_URL = `https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=${MT_KEY}`;
 
     // ===== Mapa =====
     const map = L.map('map', { zoomControl: false }).setView([START_FALLBACK.lat, START_FALLBACK.lng], START_FALLBACK.z);
-    L.tileLayer(TILE_URL, { tileSize:256, minZoom:0, maxZoom:18, detectRetina:true, crossOrigin:true }).addTo(map);
 
-    // ===== Ajuste rodapé =====
+    // Camadas base
+    const esriLayer = L.tileLayer(ESRI_URL, {
+      tileSize: 256, minZoom: 0, maxZoom: 19, maxNativeZoom: 17, detectRetina: true, crossOrigin: true,
+      attribution: 'Imagery © Esri'
+    });
+    const mapTilerLayer = L.tileLayer(MT_URL, {
+      tileSize: 256, minZoom: 0, maxZoom: 22, maxNativeZoom: 20, detectRetina: true, crossOrigin: true,
+      attribution: '&copy; <a href="https://www.maptiler.com/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
+    });
+
+    // Restaura provedor preferido
+    const storedBase = localStorage.getItem('base_provider');
+    const defaultBase = storedBase === 'MapTiler' ? mapTilerLayer : esriLayer;
+    defaultBase.addTo(map);
+
+    // Controle de camadas (discreto)
+    const baseLayers = { 'Esri Satélite': esriLayer, 'MapTiler Satélite': mapTilerLayer };
+    L.control.layers(baseLayers, null, { collapsed: true, position: 'topleft' }).addTo(map);
+    map.on('baselayerchange', (e)=>{ localStorage.setItem('base_provider', e.name === 'MapTiler Satélite' ? 'MapTiler' : 'Esri'); });
+
+    // ===== Ajuste rodapé (espessura fixa) =====
     (function syncCreditBar(){
       const bar = document.getElementById('creditBar');
-      function apply(){ document.documentElement.style.setProperty('--creditbar-h', Math.max(28, bar.getBoundingClientRect().height) + 'px'); }
+      function apply(){ document.documentElement.style.setProperty('--creditbar-h', '28px'); }
       map.whenReady(apply); window.addEventListener('resize', apply); setTimeout(apply, 0);
     })();
 
@@ -116,8 +119,7 @@
     const youIcon = L.divIcon({ className: 'you', html: '', iconSize: [10,10], iconAnchor: [5,5] });
     let youDot = null; let fixSamples = []; const MAX_SAMPLES = 8; let lastAvg = null;
     function updateYou(pos){ const { latitude:lat, longitude:lng } = pos.coords; youDot ? youDot.setLatLng([lat,lng]) : youDot = L.marker([lat,lng], {icon:youIcon, title:'Você'}).addTo(map); }
-    function averageFix(samples){ if(!samples.length) return null; const n=samples.length; const lat=samples.reduce((s,p)=>s+p.coords.latitude,0)/n; const lng=samples.reduce((s,p)=>s+p.coords.longitude,0)/n; const acc=samples.reduce((s,p)=>s+(p.coords.accuracy||0),0)/n; return { coords:{latitude:lat, longitude:lng, accuracy:acc, heading:samples[n-1].coords.heading}, timestamp:Date.now() };
-    }
+    function averageFix(samples){ if(!samples.length) return null; const n=samples.length; const lat=samples.reduce((s,p)=>s+p.coords.latitude,0)/n; const lng=samples.reduce((s,p)=>s+p.coords.longitude,0)/n; const acc=samples.reduce((s,p)=>s+(p.coords.accuracy||0),0)/n; return { coords:{latitude:lat, longitude:lng, accuracy:acc, heading:samples[n-1].coords.heading}, timestamp:Date.now() }; }
     function onGeoSuccess(pos){
       fixSamples.push(pos);
       if (fixSamples.length>MAX_SAMPLES) fixSamples.shift();
@@ -154,48 +156,24 @@
       const link = `https://maps.google.com/?q=${lat},${lng}`;
       return { lat, lng, link };
     }
-    function showToast(msg){
-      const el=document.getElementById('toast'); if(!el) return;
-      el.textContent=msg; el.style.display='block';
-      clearTimeout(showToast._t);
-      showToast._t=setTimeout(()=>{ el.style.display='none'; }, 3500);
-    }
+    function showToast(msg){ const el=document.getElementById('toast'); if(!el) return; el.textContent=msg; el.style.display='block'; clearTimeout(showToast._t); showToast._t=setTimeout(()=>{ el.style.display='none'; }, 3500); }
     function buildShareMessage(info){ return `📍 Localização\nLat / Long: ${info.lat}, ${info.lng}\nLink: ${info.link}`; }
     function openWhatsAppWith(text){ const url = 'https://wa.me/?text=' + encodeURIComponent(text); window.open(url, '_blank'); }
 
-    // ===== Print =====
+    // ===== Captura (screenshot) =====
     const DB_NAME='app-storage'; const DB_STORE='screenshots';
-    function openDB(){
-      return new Promise((resolve,reject)=>{
-        const req=indexedDB.open(DB_NAME,1);
-        req.onupgradeneeded=()=>{ const db=req.result; if(!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE,{keyPath:'id'}); };
-        req.onsuccess=()=>resolve(req.result);
-        req.onerror=()=>reject(req.error);
-      });
-    }
+    function openDB(){ return new Promise((resolve,reject)=>{ const req=indexedDB.open(DB_NAME,1); req.onupgradeneeded=()=>{ const db=req.result; if(!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE,{keyPath:'id'}); }; req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error); }); }
     async function saveScreenshot(blob, filename){
       try {
         const db=await openDB();
-        await new Promise((resolve,reject)=>{
-          const tx=db.transaction(DB_STORE,'readwrite');
-          tx.objectStore(DB_STORE).put({ id:filename, createdAt:Date.now(), blob });
-          tx.oncomplete=()=>resolve();
-          tx.onerror=()=>reject(tx.error);
-        });
+        await new Promise((resolve,reject)=>{ const tx=db.transaction(DB_STORE,'readwrite'); tx.objectStore(DB_STORE).put({ id:filename, createdAt:Date.now(), blob }); tx.oncomplete=()=>resolve(); tx.onerror=()=>reject(tx.error); });
       } catch(e){ console.error('IndexedDB save failed', e); }
     }
-    function tsFilename(){
-      const d=new Date(); const pad=(n)=>String(n).padStart(2,'0');
-      const name=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
-      return `Mapa_${name}.png`;
-    }
+    function tsFilename(){ const d=new Date(); const pad=(n)=>String(n).padStart(2,'0'); const name=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`; return `Mapa_${name}.png`; }
     async function takeScreenshot(){
       const scale=Math.min(3, Math.max(2, window.devicePixelRatio||2));
-      const hiddenEls=[...document.querySelectorAll('.you')];
-      hiddenEls.forEach(el=>el.style.visibility='hidden');
       try {
         const canvas=await html2canvas(document.body,{useCORS:true, backgroundColor:null, scale});
-        hiddenEls.forEach(el=>el.style.visibility='visible');
         const filename=tsFilename();
         canvas.toBlob(async (blob)=>{
           if(!blob){ console.error('Screenshot blob nulo'); return; }
@@ -206,69 +184,31 @@
         }, 'image/png');
       } catch(e){
         console.error('Falha no screenshot (CORS pode bloquear tiles do mapa).', e);
-        hiddenEls.forEach(el=>el.style.visibility='visible');
       }
     }
 
     // ===== Botões =====
     const btnPrintBlue=document.getElementById('btnPrintBlue');
-    const btnLoc=document.getElementById('btnLoc');
     const btnShare=document.getElementById('btnShare');
 
-    btnPrintBlue?.addEventListener('click', async ()=>{
-      btnPrintBlue.classList.add('active'); btnPrintBlue.setAttribute('aria-pressed','true');
-      await takeScreenshot();
-      setTimeout(()=>{ btnPrintBlue.classList.remove('active'); btnPrintBlue.setAttribute('aria-pressed','false'); }, 400);
-    });
+    btnPrintBlue?.addEventListener('click', async ()=>{ btnPrintBlue.classList.add('active'); btnPrintBlue.setAttribute('aria-pressed','true'); await takeScreenshot(); setTimeout(()=>{ btnPrintBlue.classList.remove('active'); btnPrintBlue.setAttribute('aria-pressed','false'); }, 400); });
 
-    btnLoc?.addEventListener('click', async ()=>{
-      const info = getLocationInfo();
-      if (!info) { showToast('Sem posição ainda. Tente novamente.'); return; }
-      const text = `Link: ${info.link}\nLat / Long: ${info.lat}, ${info.lng}`;
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-          showToast('Copiado: ' + info.lat + ', ' + info.lng);
-        } else {
-          showToast(text.replace(/\n/g,' • '));
-        }
-      } catch(e) {
-        showToast(text.replace(/\n/g,' • '));
-      }
-      const active = btnLoc.classList.toggle('active');
-      btnLoc.setAttribute('aria-pressed', active ? 'true' : 'false');
-    });
-
-    btnShare?.addEventListener('click', ()=>{
-      const info = getLocationInfo();
-      if (!info) { showToast('Sem posição ainda.'); return; }
-      const msg = buildShareMessage(info);
-      // Tenta Web Share API com WhatsApp instalado; senão, abre wa.me
-      if (navigator.share) {
-        navigator.share({ text: msg }).catch(()=> openWhatsAppWith(msg));
-      } else {
-        openWhatsAppWith(msg);
-      }
-      const active = btnShare.classList.toggle('active');
-      btnShare.setAttribute('aria-pressed', active ? 'true' : 'false');
-    });
+    btnShare?.addEventListener('click', ()=>{ const info = getLocationInfo(); if (!info) { showToast('Sem posição ainda.'); return; } const msg = buildShareMessage(info); if (navigator.share) { navigator.share({ text: msg }).catch(()=> openWhatsAppWith(msg)); } else { openWhatsAppWith(msg); } const active = btnShare.classList.toggle('active'); btnShare.setAttribute('aria-pressed', active ? 'true' : 'false'); });
 
     // ===== Start =====
     initGeolocation();
 
     // ===== Self-tests (console) =====
     (function selfTests(){
-      // Teste 1: formatação de link
       const li = { lat:'-23.550500', lng:'-46.633300', link:'https://maps.google.com/?q=-23.550500,-46.633300' };
       console.assert(buildShareMessage(li).includes('📍'), 'share message sem emoji');
-      // Teste 2: replace de \n
       const s = 'a\nb';
       console.assert(s.replace(/\n/g,' • ') === 'a • b', 'replace de quebra de linha falhou');
-      // Teste 3: nome do arquivo de captura
       const fn = tsFilename();
       console.assert(/^Mapa_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.png$/.test(fn), 'formato de nome de arquivo inválido');
+      console.assert(typeof saveScreenshot === 'function', 'saveScreenshot não é função');
+      console.assert(typeof esriLayer === 'object' && typeof mapTilerLayer === 'object', 'camadas base não criadas');
       console.log('✅ self-tests ok');
     })();
-  </script>
-</body>
+  </script></body>
 </html>
