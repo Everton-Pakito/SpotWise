@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
@@ -9,48 +8,49 @@
   <style>
     html, body, #map { height: 100%; margin: 0; }
     body { background: #000; color: #fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    .leaflet-popup-content { color:#111; }/* Ponto de localização com anel pulsante */
-.you { position: relative; width:10px; height:10px; background:#00d1ff; border:2px solid #fff; border-radius:50%; box-shadow:0 0 0 2px rgba(0,0,0,.3); }
-.you::after { content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin-left:-10px; margin-top:-10px; border:2px solid #00d1ff; border-radius:50%; opacity:.7; animation: youPulse 1.8s ease-out infinite; }
-@keyframes youPulse { 0% { transform: scale(0.6); opacity:.8; } 70% { transform: scale(1.6); opacity:0; } 100% { opacity:0; } }
+    .leaflet-popup-content { color:#111; }
 
-/* Rodapé responsivo, espessura fixa */
-.creditbar { position: fixed; inset: auto 0 0 0; z-index: 500;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.7); color: #000; text-align: center;
-  height: 28px; line-height: 28px; padding: 0 12px;
-  font-size: clamp(10px, 2.2vw, 13px); font-weight: 500; letter-spacing: .2px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  -webkit-user-select: none; user-select: none; pointer-events: none;
-  backdrop-filter: saturate(180%) blur(2px);
-}
-.creditbar .brand-left { position: absolute; left: 8px; top: 0; bottom: 0; display: flex; align-items: center; font-weight: 700; opacity: .9; pointer-events: none; }
+    /* Ponto de localização com anel pulsante */
+    .you { position: relative; width:10px; height:10px; background:#00d1ff; border:2px solid #fff; border-radius:50%; box-shadow:0 0 0 2px rgba(0,0,0,.3); }
+    .you::after { content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin-left:-10px; margin-top:-10px; border:2px solid #00d1ff; border-radius:50%; opacity:.7; animation: youPulse 1.8s ease-out infinite; }
+    @keyframes youPulse { 0% { transform: scale(0.6); opacity:.8; } 70% { transform: scale(1.6); opacity:0; } 100% { opacity:0; } }
 
-/* Barra de ações (2 botões harmônicos) */
-.actionbar { position: fixed; left: 0; right: 0; z-index: 900; display: flex; justify-content: center; align-items: center;
-  bottom: calc(36px + env(safe-area-inset-bottom)); pointer-events: auto; }
-.actionwrap { display: flex; gap: 8px; width: min(420px, 92vw); padding: 0 6px; }
-.btn { border: 0; height: 34px; padding: 0 12px; border-radius: 10px; background: rgba(0,0,0,.55); color: #fff;
-  font-size: clamp(12px, 2.6vw, 13px); font-weight: 700; letter-spacing: .3px;
-  box-shadow: 0 6px 14px rgba(0,0,0,.26);
-  backdrop-filter: saturate(180%) blur(4px);
-  text-align: center; cursor: pointer; flex: 1 1 0; min-width: 0; }
-.btn:active { transform: translateY(1px); }
-.btn:focus-visible { outline: 2px solid rgba(255,255,255,.75); outline-offset: 2px; }
-.btn-blue { background: rgba(37,99,235,.90); color:#fff; }
-.btn-blue.active { background: rgba(37,99,235,1); }
-.btn-wa { background: #25D366; color:#0b3e23; }
-.btn-wa.active { filter: brightness(0.95); }
+    /* Rodapé responsivo, espessura fixa */
+    .creditbar { position: fixed; inset: auto 0 0 0; z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.7); color: #000; text-align: center;
+      height: 28px; line-height: 28px; padding: 0 12px;
+      font-size: clamp(10px, 2.2vw, 13px); font-weight: 500; letter-spacing: .2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      -webkit-user-select: none; user-select: none; pointer-events: none;
+      backdrop-filter: saturate(180%) blur(2px);
+    }
+    .creditbar .brand-left { position: absolute; left: 8px; top: 0; bottom: 0; display: flex; align-items: center; font-weight: 700; opacity: .9; pointer-events: none; }
 
-/* Bússola */
-.compass { position: fixed; top: 8px; right: 8px; z-index: 1200;
-  width: 38px; height: 38px; border-radius: 12px; background: rgba(0,0,0,.55); box-shadow: 0 6px 16px rgba(0,0,0,.25);
-  display: flex; align-items: center; justify-content: center; backdrop-filter: saturate(180%) blur(4px); }
-.compass .dial { position: relative; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.85); }
-.compass .needle { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-50%, -80%) rotate(0deg);
-  border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 12px solid #e11d48; }
-.compass .n { position:absolute; left:50%; top:-10px; transform: translateX(-50%); font-size: 9px; color:#fff; opacity:.8; }
+    /* Barra de ações (2 botões harmônicos) */
+    .actionbar { position: fixed; left: 0; right: 0; z-index: 900; display: flex; justify-content: center; align-items: center;
+      bottom: calc(36px + env(safe-area-inset-bottom)); pointer-events: auto; }
+    .actionwrap { display: flex; gap: 8px; width: min(420px, 92vw); padding: 0 6px; }
+    .btn { border: 0; height: 34px; padding: 0 12px; border-radius: 10px; background: rgba(0,0,0,.55); color: #fff;
+      font-size: clamp(12px, 2.6vw, 13px); font-weight: 700; letter-spacing: .3px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.26);
+      backdrop-filter: saturate(180%) blur(4px);
+      text-align: center; cursor: pointer; flex: 1 1 0; min-width: 0; }
+    .btn:active { transform: translateY(1px); }
+    .btn:focus-visible { outline: 2px solid rgba(255,255,255,.75); outline-offset: 2px; }
+    .btn-blue { background: rgba(37,99,235,.90); color:#fff; }
+    .btn-blue.active { background: rgba(37,99,235,1); }
+    .btn-wa { background: #25D366; color:#0b3e23; }
+    .btn-wa.active { filter: brightness(0.95); }
 
+    /* Bússola */
+    .compass { position: fixed; top: 8px; right: 8px; z-index: 1200;
+      width: 38px; height: 38px; border-radius: 12px; background: rgba(0,0,0,.55); box-shadow: 0 6px 16px rgba(0,0,0,.25);
+      display: flex; align-items: center; justify-content: center; backdrop-filter: saturate(180%) blur(4px); }
+    .compass .dial { position: relative; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.85); }
+    .compass .needle { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-50%, -80%) rotate(0deg);
+      border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 12px solid #e11d48; }
+    .compass .n { position:absolute; left:50%; top:-10px; transform: translateX(-50%); font-size: 9px; color:#fff; opacity:.8; }
   </style>
 </head>
 <body>
@@ -58,16 +58,32 @@
   <div id="compass" class="compass" aria-label="Bússola" title="Bússola">
     <div class="dial"><div class="needle" id="needle"></div></div>
     <div class="n">N</div>
-  </div>  <div id="actionBar" class="actionbar">
+  </div>
+
+  <div id="actionBar" class="actionbar">
     <div class="actionwrap">
       <button id="btnPrintBlue" class="btn btn-blue" type="button" aria-label="Capturar">Capturar</button>
       <button id="btnShare" class="btn btn-wa" type="button" aria-label="Compartilhar no WhatsApp">Compartilhar</button>
     </div>
-  </div>  <div id="creditBar" class="creditbar">
+  </div>
+
+  <div id="creditBar" class="creditbar">
     <span class="brand-left">SpotWise</span>
     Feito com ❤️ por Everton Tezzon Ferreira
-  </div>  <!-- Toast de informação -->  <div id="toast" style="position:fixed; left:50%; transform:translateX(-50%); bottom: calc(66px + env(safe-area-inset-bottom)); z-index:1100; background: rgba(0,0,0,.72); color:#fff; border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.3; max-width:min(92vw,560px); text-align:center; display:none; box-shadow:0 6px 16px rgba(0,0,0,.3); pointer-events:none;"></div>  <!-- Scripts -->  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>  <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>  <script>
+  </div>
+
+  <!-- Toast de informação -->
+  <div id="toast" style="position:fixed; left:50%; transform:translateX(-50%); bottom: calc(66px + env(safe-area-inset-bottom)); z-index:1100; background: rgba(0,0,0,.72); color:#fff; border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.3; max-width:min(92vw,560px); text-align:center; display:none; box-shadow:0 6px 16px rgba(0,0,0,.3); pointer-events:none;"></div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
     // ===== Config =====
+    const START_FALLBACK = { lat: -23.5505, lng: -46.6333, z: 10 }; // posição e zoom inicial
+    const DEFAULT_ZOOM_ON_FIX = 17;  // zoom após 1º fix
+    const QUICK_ZOOM_ON_HINT = 14;   // zoom rápido se houver posição em cache
+
     const ESRI_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
     const MT_KEY = "tSluSTAGCWjjyqc655pn"; // MapTiler API key
     const MT_URL = `https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=${MT_KEY}`;
@@ -210,5 +226,6 @@
       console.assert(typeof esriLayer === 'object' && typeof mapTilerLayer === 'object', 'camadas base não criadas');
       console.log('✅ self-tests ok');
     })();
-  </script></body>
+  </script>
+</body>
 </html>
