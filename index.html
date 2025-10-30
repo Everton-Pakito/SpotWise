@@ -87,6 +87,8 @@
     const ESRI_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
     const MT_KEY = "tSluSTAGCWjjyqc655pn"; // MapTiler API key
     const MT_URL = `https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=${MT_KEY}`;
+    const MT_HYBRID_URL = `https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.png?key=${MT_KEY}`;
+    const OSM_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
     // ===== Mapa =====
     const map = L.map('map', { zoomControl: false }).setView([START_FALLBACK.lat, START_FALLBACK.lng], START_FALLBACK.z);
@@ -100,16 +102,29 @@
       tileSize: 256, minZoom: 0, maxZoom: 22, maxNativeZoom: 20, detectRetina: true, crossOrigin: true,
       attribution: '&copy; <a href="https://www.maptiler.com/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
     });
+    const mapTilerHybrid = L.tileLayer(MT_HYBRID_URL, {
+      tileSize: 256, minZoom: 0, maxZoom: 22, maxNativeZoom: 20, detectRetina: true, crossOrigin: true,
+      attribution: '&copy; <a href="https://www.maptiler.com/" target="_blank" rel="noopener">MapTiler</a> &copy; OpenStreetMap contributors'
+    });
+    const osmLayer = L.tileLayer(OSM_URL, {
+      tileSize: 256, minZoom: 0, maxZoom: 19, detectRetina: true, crossOrigin: true,
+      attribution: '&copy; OpenStreetMap contributors'
+    });
 
-    // Restaura provedor preferido
-    const storedBase = localStorage.getItem('base_provider');
-    const defaultBase = storedBase === 'MapTiler' ? mapTilerLayer : esriLayer;
+    // Mapa base preferido (persistido)
+    const bases = {
+      'Esri Satélite': esriLayer,
+      'MapTiler Satélite': mapTilerLayer,
+      'MapTiler Híbrido': mapTilerHybrid,
+      'OSM Padrão': osmLayer
+    };
+    const storedBaseName = localStorage.getItem('base_name');
+    const defaultBase = bases[storedBaseName] || esriLayer;
     defaultBase.addTo(map);
 
     // Controle de camadas (discreto)
-    const baseLayers = { 'Esri Satélite': esriLayer, 'MapTiler Satélite': mapTilerLayer };
-    L.control.layers(baseLayers, null, { collapsed: true, position: 'topleft' }).addTo(map);
-    map.on('baselayerchange', (e)=>{ localStorage.setItem('base_provider', e.name === 'MapTiler Satélite' ? 'MapTiler' : 'Esri'); });
+    L.control.layers(bases, null, { collapsed: true, position: 'topleft' }).addTo(map);
+    map.on('baselayerchange', (e)=>{ localStorage.setItem('base_name', e.name); });
 
     // ===== Ajuste rodapé (espessura fixa) =====
     (function syncCreditBar(){
@@ -223,7 +238,7 @@
       const fn = tsFilename();
       console.assert(/^Mapa_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.png$/.test(fn), 'formato de nome de arquivo inválido');
       console.assert(typeof saveScreenshot === 'function', 'saveScreenshot não é função');
-      console.assert(typeof esriLayer === 'object' && typeof mapTilerLayer === 'object', 'camadas base não criadas');
+      console.assert(typeof esriLayer === 'object' && typeof mapTilerLayer === 'object' && typeof mapTilerHybrid === 'object' && typeof osmLayer === 'object', 'camadas base não criadas');
       console.log('✅ self-tests ok');
     })();
   </script>
