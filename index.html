@@ -11,59 +11,127 @@
     .leaflet-popup-content { color:#111; }
 
     /* Ponto de localização com anel pulsante */
-    .you { position: relative; width:10px; height:10px; background:#00d1ff; border:2px solid #fff; border-radius:50%; box-shadow:0 0 0 2px rgba(0,0,0,.3); }
-    .you::after { content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin-left:-10px; margin-top:-10px; border:2px solid #00d1ff; border-radius:50%; opacity:.7; animation: youPulse 1.8s ease-out infinite; }
-    @keyframes youPulse { 0% { transform: scale(0.6); opacity:.8; } 70% { transform: scale(1.6); opacity:0; } 100% { opacity:0; } }
+    .you { position: relative; width:14px; height:14px; background:#00d1ff; border:3px solid #fff; border-radius:50%; box-shadow:0 0 0 2px rgba(0,0,0,.4), 0 0 12px rgba(0,209,255,.6); }
+    .you::after { content:""; position:absolute; left:50%; top:50%; width:28px; height:28px; margin-left:-14px; margin-top:-14px; border:2px solid #00d1ff; border-radius:50%; opacity:.7; animation: youPulse 1.8s ease-out infinite; }
+    @keyframes youPulse { 0% { transform: scale(0.6); opacity:.8; } 70% { transform: scale(1.8); opacity:0; } 100% { opacity:0; } }
 
-    /* Rodapé responsivo, espessura fixa */
+    /* Rodapé responsivo */
     .creditbar { position: fixed; inset: auto 0 0 0; z-index: 500;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(255,255,255,0.7); color: #000; text-align: center;
-      height: 28px; line-height: 28px; padding: 0 12px;
+      background: rgba(0,0,0,0.75); color: #fff; text-align: center;
+      height: 32px; line-height: 32px; padding: 0 12px;
       font-size: clamp(10px, 2.2vw, 13px); font-weight: 500; letter-spacing: .2px;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      -webkit-user-select: none; user-select: none; pointer-events: none;
-      backdrop-filter: saturate(180%) blur(2px);
+      backdrop-filter: saturate(180%) blur(8px); border-top: 1px solid rgba(255,255,255,0.1);
     }
-    .creditbar .brand-left { position: absolute; left: 8px; top: 0; bottom: 0; display: flex; align-items: center; font-weight: 700; opacity: .9; pointer-events: none; }
+    .creditbar .brand-left { position: absolute; left: 12px; top: 0; bottom: 0; display: flex; align-items: center; font-weight: 700; color: #00d1ff; }
 
-    /* Barra de ações (2 botões harmônicos) */
+    /* Barra de ações (3 botões melhorados) */
     .actionbar { position: fixed; left: 0; right: 0; z-index: 900; display: flex; justify-content: center; align-items: center;
-      bottom: calc(36px + env(safe-area-inset-bottom)); pointer-events: auto; }
-    .actionwrap { display: flex; gap: 8px; width: min(420px, 92vw); padding: 0 6px; }
-    .btn { border: 0; height: 34px; padding: 0 12px; border-radius: 10px; background: rgba(0,0,0,.55); color: #fff;
-      font-size: clamp(12px, 2.6vw, 13px); font-weight: 700; letter-spacing: .3px;
-      box-shadow: 0 6px 14px rgba(0,0,0,.26);
-      backdrop-filter: saturate(180%) blur(4px);
-      text-align: center; cursor: pointer; flex: 1 1 0; min-width: 0; }
+      bottom: calc(42px + env(safe-area-inset-bottom)); pointer-events: none; }
+    .actionwrap { display: flex; gap: 8px; width: min(480px, 94vw); padding: 0 8px; pointer-events: auto; }
+    .btn { border: 0; height: 44px; padding: 0 16px; border-radius: 12px; background: rgba(0,0,0,.7); color: #fff;
+      font-size: clamp(12px, 2.8vw, 14px); font-weight: 600; letter-spacing: .3px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.3);
+      backdrop-filter: saturate(180%) blur(8px);
+      text-align: center; cursor: pointer; flex: 1 1 0; min-width: 0; 
+      transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.1); }
     .btn:active { transform: translateY(1px); }
     .btn:focus-visible { outline: 2px solid rgba(255,255,255,.75); outline-offset: 2px; }
-    .btn-blue { background: rgba(37,99,235,.90); color:#fff; }
-    .btn-blue.active { background: rgba(37,99,235,1); }
-    .btn-wa { background: #25D366; color:#0b3e23; }
-    .btn-wa.active { filter: brightness(0.95); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-locate { background: rgba(37,99,235,.85); color:#fff; }
+    .btn-locate:hover:not(:disabled) { background: rgba(37,99,235,.95); }
+    .btn-locate.active { background: rgba(34,197,94,.85); }
+    .btn-capture { background: rgba(168,85,247,.85); color:#fff; }
+    .btn-capture:hover:not(:disabled) { background: rgba(168,85,247,.95); }
+    .btn-share { background: #25D366; color:#fff; }
+    .btn-share:hover:not(:disabled) { background: #20bd5a; }
 
-    /* Bússola */
-    .compass { position: fixed; top: 8px; right: 8px; z-index: 1200;
-      width: 38px; height: 38px; border-radius: 12px; background: rgba(0,0,0,.55); box-shadow: 0 6px 16px rgba(0,0,0,.25);
-      display: flex; align-items: center; justify-content: center; backdrop-filter: saturate(180%) blur(4px); }
-    .compass .dial { position: relative; width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,.85); }
-    .compass .needle { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-50%, -80%) rotate(0deg);
-      border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 12px solid #e11d48; }
-    .compass .n { position:absolute; left:50%; top:-10px; transform: translateX(-50%); font-size: 9px; color:#fff; opacity:.8; }
+    /* Bússola melhorada */
+    .compass { position: fixed; top: 12px; right: 12px; z-index: 1200;
+      width: 48px; height: 48px; border-radius: 50%; background: rgba(0,0,0,.75); 
+      box-shadow: 0 4px 16px rgba(0,0,0,.3);
+      display: flex; align-items: center; justify-content: center; 
+      backdrop-filter: saturate(180%) blur(8px); 
+      border: 1px solid rgba(255,255,255,0.15); }
+    .compass .dial { position: relative; width: 32px; height: 32px; border-radius: 50%; 
+      background: linear-gradient(135deg, rgba(255,255,255,.9), rgba(240,240,240,.9)); 
+      box-shadow: inset 0 2px 4px rgba(0,0,0,.1); }
+    .compass .needle { position: absolute; left: 50%; top: 50%; width: 0; height: 0; 
+      transform: translate(-50%, -80%) rotate(0deg);
+      border-left: 5px solid transparent; border-right: 5px solid transparent; 
+      border-bottom: 14px solid #e11d48; filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+      transition: transform 0.3s ease; }
+    .compass .n { position:absolute; left:50%; top:-2px; transform: translateX(-50%); 
+      font-size: 10px; color:#fff; font-weight: 700; opacity:.9; }
+
+    /* Info box melhorado */
+    .infobox { position: fixed; top: 12px; left: 12px; z-index: 1100;
+      background: rgba(0,0,0,.75); color: #fff; padding: 10px 14px;
+      border-radius: 10px; font-size: 11px; line-height: 1.5;
+      max-width: min(280px, calc(100vw - 80px)); backdrop-filter: saturate(180%) blur(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,0.1);
+      display: none; }
+    .infobox.show { display: block; }
+    .infobox .label { opacity: 0.7; font-size: 9px; text-transform: uppercase; letter-spacing: .5px; }
+    .infobox .value { font-weight: 600; color: #00d1ff; }
+
+    /* Toast melhorado */
+    .toast { position:fixed; left:50%; transform:translateX(-50%); 
+      bottom: calc(96px + env(safe-area-inset-bottom)); z-index:1300; 
+      background: rgba(0,0,0,.85); color:#fff; border-radius:12px; 
+      padding:12px 18px; font-size:13px; line-height:1.4; 
+      max-width:min(90vw,400px); text-align:center; display:none; 
+      box-shadow:0 6px 20px rgba(0,0,0,.4); pointer-events:none;
+      backdrop-filter: saturate(180%) blur(8px); font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.1); }
+    .toast.show { display: block; animation: toastIn 0.3s ease; }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    /* Loading spinner */
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Accuracy circle */
+    .accuracy-circle { fill: rgba(0,209,255,0.1); stroke: rgba(0,209,255,0.4); stroke-width: 2; }
+
+    /* Loading screen */
+    #loading { position: fixed; inset: 0; background: #000; color: #fff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 9999; }
+    #loading.hidden { display: none; }
   </style>
 </head>
 <body>
+  <div id="loading">
+    <div style="font-size: 24px; margin-bottom: 16px;">SpotWise</div>
+    <div class="spinner"></div>
+  </div>
+
   <div id="map"></div>
+  
   <div id="compass" class="compass" aria-label="Bússola" title="Bússola">
     <div class="dial"><div class="needle" id="needle"></div></div>
     <div class="n">N</div>
   </div>
 
+  <div id="infoBox" class="infobox">
+    <div><span class="label">Precisão:</span> <span class="value" id="infoAccuracy">--</span></div>
+    <div><span class="label">Altitude:</span> <span class="value" id="infoAltitude">--</span></div>
+    <div><span class="label">Velocidade:</span> <span class="value" id="infoSpeed">--</span></div>
+  </div>
+
   <div id="actionBar" class="actionbar">
     <div class="actionwrap">
-      <button id="btnPrintBlue" class="btn btn-blue" type="button" aria-label="Capturar">Capturar</button>
-      <button id="btnShare" class="btn btn-wa" type="button" aria-label="Compartilhar no WhatsApp">Compartilhar</button>
+      <button id="btnLocate" class="btn btn-locate" type="button" aria-label="Localizar">
+        📍 Localizar
+      </button>
+      <button id="btnCapture" class="btn btn-capture" type="button" aria-label="Capturar">
+        📸 Capturar
+      </button>
+      <button id="btnShare" class="btn btn-share" type="button" aria-label="Compartilhar">
+        📤 Enviar
+      </button>
     </div>
   </div>
 
@@ -72,174 +140,488 @@
     Feito com ❤️ por Everton Tezzon Ferreira
   </div>
 
-  <!-- Toast de informação -->
-  <div id="toast" style="position:fixed; left:50%; transform:translateX(-50%); bottom: calc(66px + env(safe-area-inset-bottom)); z-index:1100; background: rgba(0,0,0,.72); color:#fff; border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.3; max-width:min(92vw,560px); text-align:center; display:none; box-shadow:0 6px 16px rgba(0,0,0,.3); pointer-events:none;"></div>
+  <div id="toast" class="toast"></div>
 
-  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
-    // ===== Config =====
-    const START_FALLBACK = { lat: -23.5505, lng: -46.6333, z: 10 }; // posição e zoom inicial
-    const DEFAULT_ZOOM_ON_FIX = 17;  // zoom após 1º fix
-    const QUICK_ZOOM_ON_HINT = 14;   // zoom rápido se houver posição em cache
+    (function() {
+      'use strict';
 
-    const ESRI_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
-    const MT_KEY = "tSluSTAGCWjjyqc655pn"; // MapTiler API key
-    const MT_URL = `https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=${MT_KEY}`;
-    const MT_HYBRID_URL = `https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.png?key=${MT_KEY}`;
-    const OSM_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-
-    // ===== Mapa =====
-    const map = L.map('map', { zoomControl: false }).setView([START_FALLBACK.lat, START_FALLBACK.lng], START_FALLBACK.z);
-
-    // Camadas base
-    const esriLayer = L.tileLayer(ESRI_URL, {
-      tileSize: 256, minZoom: 0, maxZoom: 19, maxNativeZoom: 17, detectRetina: true, crossOrigin: true,
-      attribution: 'Imagery © Esri'
-    });
-    const mapTilerLayer = L.tileLayer(MT_URL, {
-      tileSize: 256, minZoom: 0, maxZoom: 22, maxNativeZoom: 20, detectRetina: true, crossOrigin: true,
-      attribution: '&copy; <a href="https://www.maptiler.com/" target="_blank" rel="noopener">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
-    });
-    const mapTilerHybrid = L.tileLayer(MT_HYBRID_URL, {
-      tileSize: 256, minZoom: 0, maxZoom: 22, maxNativeZoom: 20, detectRetina: true, crossOrigin: true,
-      attribution: '&copy; <a href="https://www.maptiler.com/" target="_blank" rel="noopener">MapTiler</a> &copy; OpenStreetMap contributors'
-    });
-    const osmLayer = L.tileLayer(OSM_URL, {
-      tileSize: 256, minZoom: 0, maxZoom: 19, detectRetina: true, crossOrigin: true,
-      attribution: '&copy; OpenStreetMap contributors'
-    });
-
-    // Mapa base preferido (persistido)
-    const bases = {
-      'Esri Satélite': esriLayer,
-      'MapTiler Satélite': mapTilerLayer,
-      'MapTiler Híbrido': mapTilerHybrid,
-      'OSM Padrão': osmLayer
-    };
-    const storedBaseName = localStorage.getItem('base_name');
-    const defaultBase = bases[storedBaseName] || esriLayer;
-    defaultBase.addTo(map);
-
-    // Controle de camadas (discreto)
-    L.control.layers(bases, null, { collapsed: true, position: 'topleft' }).addTo(map);
-    map.on('baselayerchange', (e)=>{ localStorage.setItem('base_name', e.name); });
-
-    // ===== Ajuste rodapé (espessura fixa) =====
-    (function syncCreditBar(){
-      const bar = document.getElementById('creditBar');
-      function apply(){ document.documentElement.style.setProperty('--creditbar-h', '28px'); }
-      map.whenReady(apply); window.addEventListener('resize', apply); setTimeout(apply, 0);
-    })();
-
-    // ===== Bússola =====
-    const needleEl = document.getElementById('needle');
-    function updateCompass(deg){ if (needleEl) needleEl.style.transform = `translate(-50%, -80%) rotate(${deg||0}deg)`; }
-    (function initDeviceOrientation(){
-      if (!('DeviceOrientationEvent' in window)) return;
-      function onPermitted(){ window.addEventListener('deviceorientation', (ev)=>{
-        const anyEv = ev; const webkitHeading = anyEv && anyEv.webkitCompassHeading; let deg = null;
-        if (typeof webkitHeading === 'number') deg = webkitHeading; else if (typeof ev.alpha === 'number') deg = 360 - ev.alpha;
-        if (deg != null && isFinite(deg)) updateCompass(deg);
-      }, true); }
-      try { if (typeof DeviceOrientationEvent.requestPermission === 'function') { DeviceOrientationEvent.requestPermission().then(s=>{ if (s==='granted') onPermitted(); }); } else { onPermitted(); } } catch(e){}
-    })();
-
-    // ===== Geolocalização =====
-    const youIcon = L.divIcon({ className: 'you', html: '', iconSize: [10,10], iconAnchor: [5,5] });
-    let youDot = null; let fixSamples = []; const MAX_SAMPLES = 8; let lastAvg = null;
-    function updateYou(pos){ const { latitude:lat, longitude:lng } = pos.coords; youDot ? youDot.setLatLng([lat,lng]) : youDot = L.marker([lat,lng], {icon:youIcon, title:'Você'}).addTo(map); }
-    function averageFix(samples){ if(!samples.length) return null; const n=samples.length; const lat=samples.reduce((s,p)=>s+p.coords.latitude,0)/n; const lng=samples.reduce((s,p)=>s+p.coords.longitude,0)/n; const acc=samples.reduce((s,p)=>s+(p.coords.accuracy||0),0)/n; return { coords:{latitude:lat, longitude:lng, accuracy:acc, heading:samples[n-1].coords.heading}, timestamp:Date.now() }; }
-    function onGeoSuccess(pos){
-      fixSamples.push(pos);
-      if (fixSamples.length>MAX_SAMPLES) fixSamples.shift();
-      const avg=averageFix(fixSamples);
-      if(!avg) return;
-      lastAvg=avg; updateYou(avg);
-      if (!onGeoSuccess._centered) { map.setView([avg.coords.latitude, avg.coords.longitude], DEFAULT_ZOOM_ON_FIX); onGeoSuccess._centered=true; }
-    }
-    function onGeoError(err){ console.error('Erro GPS:', err && err.message ? err.message : err); }
-    async function initGeolocation(){
-      if(!('geolocation' in navigator)) return;
-      try {
-        navigator.geolocation.getCurrentPosition((pos)=>{
-          if(!onGeoSuccess._centered){ updateYou(pos); map.setView([pos.coords.latitude, pos.coords.longitude], QUICK_ZOOM_ON_HINT); }
-        }, ()=>{}, { enableHighAccuracy:false, maximumAge:120000, timeout:3000 });
-      } catch(e){}
-      try {
-        if (navigator.permissions && navigator.permissions.query){
-          const perm = await navigator.permissions.query({name:'geolocation'});
-          if (perm && perm.state==='denied') return;
+      // Aguarda até que Leaflet esteja disponível
+      function waitForLeaflet(callback) {
+        if (typeof L !== 'undefined') {
+          callback();
+        } else {
+          setTimeout(function() { waitForLeaflet(callback); }, 50);
         }
-      } catch(e){}
-      try {
-        navigator.geolocation.watchPosition(onGeoSuccess, onGeoError, { enableHighAccuracy:true, maximumAge:10000, timeout:20000 });
-      } catch(e){ console.error('watchPosition exception', e); }
-    }
-
-    // ===== Util localização / toast =====
-    function getLocationInfo(){
-      const src = lastAvg ? { lat:lastAvg.coords.latitude, lng:lastAvg.coords.longitude } : (youDot ? youDot.getLatLng() : null);
-      if (!src || typeof src.lat !== 'number' || typeof src.lng !== 'number') return null;
-      const lat = Number(src.lat).toFixed(6);
-      const lng = Number(src.lng).toFixed(6);
-      const link = `https://maps.google.com/?q=${lat},${lng}`;
-      return { lat, lng, link };
-    }
-    function showToast(msg){ const el=document.getElementById('toast'); if(!el) return; el.textContent=msg; el.style.display='block'; clearTimeout(showToast._t); showToast._t=setTimeout(()=>{ el.style.display='none'; }, 3500); }
-    function buildShareMessage(info){ return `📍 Localização\nLat / Long: ${info.lat}, ${info.lng}\nLink: ${info.link}`; }
-    function openWhatsAppWith(text){ const url = 'https://wa.me/?text=' + encodeURIComponent(text); window.open(url, '_blank'); }
-
-    // ===== Captura (screenshot) =====
-    const DB_NAME='app-storage'; const DB_STORE='screenshots';
-    function openDB(){ return new Promise((resolve,reject)=>{ const req=indexedDB.open(DB_NAME,1); req.onupgradeneeded=()=>{ const db=req.result; if(!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE,{keyPath:'id'}); }; req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error); }); }
-    async function saveScreenshot(blob, filename){
-      try {
-        const db=await openDB();
-        await new Promise((resolve,reject)=>{ const tx=db.transaction(DB_STORE,'readwrite'); tx.objectStore(DB_STORE).put({ id:filename, createdAt:Date.now(), blob }); tx.oncomplete=()=>resolve(); tx.onerror=()=>reject(tx.error); });
-      } catch(e){ console.error('IndexedDB save failed', e); }
-    }
-    function tsFilename(){ const d=new Date(); const pad=(n)=>String(n).padStart(2,'0'); const name=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`; return `Mapa_${name}.png`; }
-    async function takeScreenshot(){
-      const scale=Math.min(3, Math.max(2, window.devicePixelRatio||2));
-      try {
-        const canvas=await html2canvas(document.body,{useCORS:true, backgroundColor:null, scale});
-        const filename=tsFilename();
-        canvas.toBlob(async (blob)=>{
-          if(!blob){ console.error('Screenshot blob nulo'); return; }
-          await saveScreenshot(blob, filename);
-          const url=URL.createObjectURL(blob);
-          const a=document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click();
-          setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 800);
-        }, 'image/png');
-      } catch(e){
-        console.error('Falha no screenshot (CORS pode bloquear tiles do mapa).', e);
       }
-    }
 
-    // ===== Botões =====
-    const btnPrintBlue=document.getElementById('btnPrintBlue');
-    const btnShare=document.getElementById('btnShare');
+      waitForLeaflet(function() {
+        // Remove loading screen
+        document.getElementById('loading').classList.add('hidden');
 
-    btnPrintBlue?.addEventListener('click', async ()=>{ btnPrintBlue.classList.add('active'); btnPrintBlue.setAttribute('aria-pressed','true'); await takeScreenshot(); setTimeout(()=>{ btnPrintBlue.classList.remove('active'); btnPrintBlue.setAttribute('aria-pressed','false'); }, 400); });
+        // ===== Config =====
+        var START_FALLBACK = { lat: -23.5505, lng: -46.6333, z: 12 };
+        var DEFAULT_ZOOM_ON_FIX = 17;
+        var QUICK_ZOOM_ON_HINT = 15;
 
-    btnShare?.addEventListener('click', ()=>{ const info = getLocationInfo(); if (!info) { showToast('Sem posição ainda.'); return; } const msg = buildShareMessage(info); if (navigator.share) { navigator.share({ text: msg }).catch(()=> openWhatsAppWith(msg)); } else { openWhatsAppWith(msg); } const active = btnShare.classList.toggle('active'); btnShare.setAttribute('aria-pressed', active ? 'true' : 'false'); });
+        var ESRI_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+        var MT_KEY = "tSluSTAGCWjjyqc655pn";
+        var MT_URL = "https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=" + MT_KEY;
+        var MT_HYBRID_URL = "https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.png?key=" + MT_KEY;
+        var OSM_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-    // ===== Start =====
-    initGeolocation();
+        // ===== State =====
+        var state = {
+          map: null,
+          youDot: null,
+          accuracyCircle: null,
+          fixSamples: [],
+          lastAvg: null,
+          watchId: null,
+          isTracking: false,
+          isCentered: false
+        };
 
-    // ===== Self-tests (console) =====
-    (function selfTests(){
-      const li = { lat:'-23.550500', lng:'-46.633300', link:'https://maps.google.com/?q=-23.550500,-46.633300' };
-      console.assert(buildShareMessage(li).includes('📍'), 'share message sem emoji');
-      const s = 'a\nb';
-      console.assert(s.replace(/\n/g,' • ') === 'a • b', 'replace de quebra de linha falhou');
-      const fn = tsFilename();
-      console.assert(/^Mapa_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.png$/.test(fn), 'formato de nome de arquivo inválido');
-      console.assert(typeof saveScreenshot === 'function', 'saveScreenshot não é função');
-      console.assert(typeof esriLayer === 'object' && typeof mapTilerLayer === 'object' && typeof mapTilerHybrid === 'object' && typeof osmLayer === 'object', 'camadas base não criadas');
-      console.log('✅ self-tests ok');
+        var MAX_SAMPLES = 5;
+
+        // ===== Mapa =====
+        state.map = L.map('map', { 
+          zoomControl: true,
+          attributionControl: true
+        }).setView([START_FALLBACK.lat, START_FALLBACK.lng], START_FALLBACK.z);
+
+        // Camadas base
+        var esriLayer = L.tileLayer(ESRI_URL, {
+          tileSize: 256, minZoom: 0, maxZoom: 19, maxNativeZoom: 17, detectRetina: true, crossOrigin: true,
+          attribution: 'Imagery © Esri'
+        });
+        var mapTilerLayer = L.tileLayer(MT_URL, {
+          tileSize: 512, minZoom: 0, maxZoom: 22, maxNativeZoom: 20, detectRetina: true, crossOrigin: true,
+          attribution: '© MapTiler © OpenStreetMap contributors'
+        });
+        var mapTilerHybrid = L.tileLayer(MT_HYBRID_URL, {
+          tileSize: 512, minZoom: 0, maxZoom: 22, maxNativeZoom: 20, detectRetina: true, crossOrigin: true,
+          attribution: '© MapTiler © OpenStreetMap contributors'
+        });
+        var osmLayer = L.tileLayer(OSM_URL, {
+          tileSize: 256, minZoom: 0, maxZoom: 19, detectRetina: true, crossOrigin: true,
+          attribution: '© OpenStreetMap contributors'
+        });
+
+        var bases = {
+          'Esri Satélite': esriLayer,
+          'MapTiler Satélite': mapTilerLayer,
+          'MapTiler Híbrido': mapTilerHybrid,
+          'OSM Padrão': osmLayer
+        };
+        
+        var storedBaseName = localStorage.getItem('base_name');
+        var defaultBase = bases[storedBaseName] || mapTilerHybrid;
+        defaultBase.addTo(state.map);
+
+        L.control.layers(bases, null, { collapsed: true, position: 'topleft' }).addTo(state.map);
+        state.map.on('baselayerchange', function(e) { localStorage.setItem('base_name', e.name); });
+
+        // ===== Bússola =====
+        var needleEl = document.getElementById('needle');
+        function updateCompass(deg) {
+          if (needleEl && typeof deg === 'number') {
+            needleEl.style.transform = 'translate(-50%, -80%) rotate(' + deg + 'deg)';
+          }
+        }
+
+        function initDeviceOrientation() {
+          if (!('DeviceOrientationEvent' in window)) return;
+          
+          function onPermitted() {
+            window.addEventListener('deviceorientation', function(ev) {
+              var webkitHeading = ev.webkitCompassHeading;
+              var deg = null;
+              
+              if (typeof webkitHeading === 'number') {
+                deg = webkitHeading;
+              } else if (typeof ev.alpha === 'number') {
+                deg = 360 - ev.alpha;
+              }
+              
+              if (deg != null && isFinite(deg)) {
+                updateCompass(deg);
+              }
+            }, true);
+          }
+          
+          try {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+              DeviceOrientationEvent.requestPermission().then(function(s) {
+                if (s === 'granted') onPermitted();
+              });
+            } else {
+              onPermitted();
+            }
+          } catch(e) {
+            console.error('Erro ao iniciar orientação:', e);
+          }
+        }
+
+        // ===== Geolocalização =====
+        var youIcon = L.divIcon({ 
+          className: 'you', 
+          html: '', 
+          iconSize: [14, 14], 
+          iconAnchor: [7, 7] 
+        });
+
+        function updateYou(pos) {
+          var lat = pos.coords.latitude;
+          var lng = pos.coords.longitude;
+          var accuracy = pos.coords.accuracy;
+          
+          if (!state.youDot) {
+            state.youDot = L.marker([lat, lng], {
+              icon: youIcon,
+              title: 'Você está aqui'
+            }).addTo(state.map);
+          } else {
+            state.youDot.setLatLng([lat, lng]);
+          }
+
+          // Círculo de precisão
+          if (accuracy && accuracy < 1000) {
+            if (!state.accuracyCircle) {
+              state.accuracyCircle = L.circle([lat, lng], {
+                radius: accuracy,
+                className: 'accuracy-circle',
+                interactive: false
+              }).addTo(state.map);
+            } else {
+              state.accuracyCircle.setLatLng([lat, lng]);
+              state.accuracyCircle.setRadius(accuracy);
+            }
+          }
+
+          updateInfoBox(pos);
+        }
+
+        function averageFix(samples) {
+          if (!samples.length) return null;
+          var n = samples.length;
+          var lat = samples.reduce(function(s, p) { return s + p.coords.latitude; }, 0) / n;
+          var lng = samples.reduce(function(s, p) { return s + p.coords.longitude; }, 0) / n;
+          var acc = samples.reduce(function(s, p) { return s + (p.coords.accuracy || 0); }, 0) / n;
+          var last = samples[n - 1];
+          
+          return {
+            coords: {
+              latitude: lat,
+              longitude: lng,
+              accuracy: acc,
+              altitude: last.coords.altitude,
+              speed: last.coords.speed,
+              heading: last.coords.heading
+            },
+            timestamp: Date.now()
+          };
+        }
+
+        function onGeoSuccess(pos) {
+          state.fixSamples.push(pos);
+          if (state.fixSamples.length > MAX_SAMPLES) {
+            state.fixSamples.shift();
+          }
+          
+          var avg = averageFix(state.fixSamples);
+          if (!avg) return;
+          
+          state.lastAvg = avg;
+          updateYou(avg);
+          
+          if (!state.isCentered) {
+            state.map.setView([avg.coords.latitude, avg.coords.longitude], DEFAULT_ZOOM_ON_FIX);
+            state.isCentered = true;
+            showToast('✓ Localização obtida com sucesso!');
+          }
+        }
+
+        function onGeoError(err) {
+          console.error('Erro GPS:', err);
+          var msg = 'Erro ao obter localização';
+          
+          if (err.code === 1) msg = 'Permissão de localização negada';
+          else if (err.code === 2) msg = 'Posição indisponível';
+          else if (err.code === 3) msg = 'Tempo esgotado';
+          
+          showToast('⚠️ ' + msg);
+          stopTracking();
+        }
+
+        function startTracking() {
+          if (state.isTracking || !navigator.geolocation) return;
+          
+          state.isTracking = true;
+          updateLocateButton(true);
+          
+          // Quick position
+          navigator.geolocation.getCurrentPosition(
+            function(pos) {
+              if (!state.isCentered) {
+                updateYou(pos);
+                state.map.setView([pos.coords.latitude, pos.coords.longitude], QUICK_ZOOM_ON_HINT);
+              }
+            },
+            function() {},
+            { enableHighAccuracy: false, maximumAge: 120000, timeout: 5000 }
+          );
+
+          // Continuous tracking
+          state.watchId = navigator.geolocation.watchPosition(
+            onGeoSuccess,
+            onGeoError,
+            { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+          );
+        }
+
+        function stopTracking() {
+          if (!state.isTracking) return;
+          
+          if (state.watchId !== null) {
+            navigator.geolocation.clearWatch(state.watchId);
+            state.watchId = null;
+          }
+          
+          state.isTracking = false;
+          updateLocateButton(false);
+          hideInfoBox();
+        }
+
+        function toggleTracking() {
+          if (state.isTracking) {
+            stopTracking();
+            showToast('Rastreamento pausado');
+          } else {
+            startTracking();
+            showInfoBox();
+          }
+        }
+
+        // ===== Info Box =====
+        function updateInfoBox(pos) {
+          var acc = pos.coords.accuracy;
+          var alt = pos.coords.altitude;
+          var speed = pos.coords.speed;
+          
+          document.getElementById('infoAccuracy').textContent = 
+            acc ? '±' + Math.round(acc) + 'm' : '--';
+          document.getElementById('infoAltitude').textContent = 
+            alt ? Math.round(alt) + 'm' : '--';
+          document.getElementById('infoSpeed').textContent = 
+            speed ? (speed * 3.6).toFixed(1) + ' km/h' : '--';
+        }
+
+        function showInfoBox() {
+          document.getElementById('infoBox').classList.add('show');
+        }
+
+        function hideInfoBox() {
+          document.getElementById('infoBox').classList.remove('show');
+        }
+
+        // ===== Toast =====
+        var toastTimeout;
+        function showToast(msg) {
+          var el = document.getElementById('toast');
+          if (!el) return;
+          
+          el.textContent = msg;
+          el.classList.add('show');
+          
+          clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(function() {
+            el.classList.remove('show');
+          }, 3500);
+        }
+
+        // ===== Localização Info =====
+        function getLocationInfo() {
+          var src = state.lastAvg ? 
+            { lat: state.lastAvg.coords.latitude, lng: state.lastAvg.coords.longitude } : 
+            (state.youDot ? state.youDot.getLatLng() : null);
+          
+          if (!src || typeof src.lat !== 'number' || typeof src.lng !== 'number') {
+            return null;
+          }
+          
+          var lat = Number(src.lat).toFixed(6);
+          var lng = Number(src.lng).toFixed(6);
+          var googleLink = 'https://maps.google.com/?q=' + lat + ',' + lng;
+          var wazeLink = 'https://waze.com/ul?ll=' + lat + ',' + lng;
+          
+          return { lat: lat, lng: lng, googleLink: googleLink, wazeLink: wazeLink };
+        }
+
+        function buildShareMessage(info) {
+          var dt = new Date();
+          var time = dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          var date = dt.toLocaleDateString('pt-BR');
+          
+          return '📍 *Minha Localização - SpotWise*\n\n' +
+                 '📅 ' + date + ' às ' + time + '\n' +
+                 '🌐 Lat/Long: ' + info.lat + ', ' + info.lng + '\n\n' +
+                 '🔗 Links:\n' +
+                 'Google Maps: ' + info.googleLink + '\n' +
+                 'Waze: ' + info.wazeLink;
+        }
+
+        function openWhatsAppWith(text) {
+          var url = 'https://wa.me/?text=' + encodeURIComponent(text);
+          window.open(url, '_blank');
+        }
+
+        // ===== Screenshot =====
+        var DB_NAME = 'spotwise-db';
+        var DB_STORE = 'screenshots';
+        
+        function openDB() {
+          return new Promise(function(resolve, reject) {
+            var req = indexedDB.open(DB_NAME, 1);
+            req.onupgradeneeded = function() {
+              var db = req.result;
+              if (!db.objectStoreNames.contains(DB_STORE)) {
+                db.createObjectStore(DB_STORE, { keyPath: 'id' });
+              }
+            };
+            req.onsuccess = function() { resolve(req.result); };
+            req.onerror = function() { reject(req.error); };
+          });
+        }
+
+        function saveScreenshot(blob, filename) {
+          return openDB().then(function(db) {
+            return new Promise(function(resolve, reject) {
+              var tx = db.transaction(DB_STORE, 'readwrite');
+              tx.objectStore(DB_STORE).put({
+                id: filename,
+                createdAt: Date.now(),
+                blob: blob
+              });
+              tx.oncomplete = function() { resolve(); };
+              tx.onerror = function() { reject(tx.error); };
+            });
+          }).catch(function(e) {
+            console.error('Erro ao salvar no IndexedDB:', e);
+          });
+        }
+
+        function tsFilename() {
+          var d = new Date();
+          var pad = function(n) { return String(n).padStart(2, '0'); };
+          var name = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '_' +
+                     pad(d.getHours()) + '-' + pad(d.getMinutes()) + '-' + pad(d.getSeconds());
+          return 'SpotWise_' + name + '.png';
+        }
+
+        function takeScreenshot() {
+          var btn = document.getElementById('btnCapture');
+          btn.disabled = true;
+          btn.innerHTML = '📸 Capturando<span class="spinner"></span>';
+          
+          var scale = Math.min(3, Math.max(2, window.devicePixelRatio || 2));
+          
+          html2canvas(document.body, {
+            useCORS: true,
+            backgroundColor: '#000',
+            scale: scale,
+            logging: false
+          }).then(function(canvas) {
+            var filename = tsFilename();
+            
+            canvas.toBlob(function(blob) {
+              if (!blob) {
+                showToast('❌ Erro ao gerar imagem');
+                btn.disabled = false;
+                btn.innerHTML = '📸 Capturar';
+                return;
+              }
+              
+              saveScreenshot(blob, filename);
+              
+              var url = URL.createObjectURL(blob);
+              var a = document.createElement('a');
+              a.href = url;
+              a.download = filename;
+              document.body.appendChild(a);
+              a.click();
+              
+              setTimeout(function() {
+                URL.revokeObjectURL(url);
+                a.remove();
+              }, 1000);
+              
+              showToast('✓ Screenshot salvo!');
+              btn.disabled = false;
+              btn.innerHTML = '📸 Capturar';
+            }, 'image/png', 0.95);
+            
+          }).catch(function(e) {
+            console.error('Erro ao capturar:', e);
+            showToast('❌ Erro ao capturar tela');
+            btn.disabled = false;
+            btn.innerHTML = '📸 Capturar';
+          });
+        }
+
+        // ===== Botões =====
+        function updateLocateButton(active) {
+          var btn = document.getElementById('btnLocate');
+          if (active) {
+            btn.classList.add('active');
+            btn.innerHTML = '✓ Rastreando';
+          } else {
+            btn.classList.remove('active');
+            btn.innerHTML = '📍 Localizar';
+          }
+        }
+
+        document.getElementById('btnLocate').addEventListener('click', toggleTracking);
+
+        document.getElementById('btnCapture').addEventListener('click', function() {
+          takeScreenshot();
+        });
+
+        document.getElementById('btnShare').addEventListener('click', function() {
+          var info = getLocationInfo();
+          
+          if (!info) {
+            showToast('⚠️ Ative a localização primeiro');
+            return;
+          }
+          
+          var msg = buildShareMessage(info);
+          
+          if (navigator.share) {
+            navigator.share({ text: msg }).catch(function() { openWhatsAppWith(msg); });
+          } else {
+            openWhatsAppWith(msg);
+          }
+          
+          showToast('✓ Compartilhando localização');
+        });
+
+        // ===== Inicialização =====
+        initDeviceOrientation();
+        
+        // Auto-start tracking if permission already granted
+        if (navigator.permissions) {
+          navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+            if (result.state === 'granted') {
+              setTimeout(function() { startTracking(); }, 500);
+            }
+          }).catch(function() {});
+        }
+
+        console.log('✅ SpotWise inicializado com sucesso!');
+      });
     })();
   </script>
 </body>
